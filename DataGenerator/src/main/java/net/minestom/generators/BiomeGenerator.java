@@ -24,12 +24,12 @@ public final class BiomeGenerator extends DataGenerator {
             var biome = entry.getValue();
             JsonObject biomeJson = new JsonObject();
 
-            biomeJson.addProperty("humid", biome.isHumid());
+`//            biomeJson.addProperty("humid", biome.isHumid());
 //            biomeJson.addProperty("scale", biome.dep);
 //            biomeJson.addProperty("depth", biome.getDepth());
             biomeJson.addProperty("temperature", biome.getBaseTemperature());
-            biomeJson.addProperty("downfall", biome.getDownfall());
-            biomeJson.addProperty("precipitation", biome.getPrecipitation().getSerializedName());
+//            biomeJson.addProperty("downfall", biome.getDownfall());
+//            biomeJson.addProperty("precipitation", biome.getPrecipitation().getSerializedName());
             // Colors
             biomeJson.addProperty("fogColor", biome.getFogColor());
             biomeJson.addProperty("waterColor", biome.getWaterColor());
@@ -100,7 +100,7 @@ public final class BiomeGenerator extends DataGenerator {
         return new Biome.BiomeBuilder()
                 .temperature(json.get("temperature").getAsFloat())
                 .downfall(json.get("downfall").getAsFloat())
-                .precipitation(Biome.Precipitation.valueOf(json.get("precipitation").getAsString().toUpperCase()))
+//                .precipitation(Biome.Precipitation.valueOf(json.get("precipitation").getAsString().toUpperCase()))
                 .specialEffects(effects.build())
                 .mobSpawnSettings(MobSpawnSettings.EMPTY)
                 .generationSettings(BiomeGenerationSettings.EMPTY)
