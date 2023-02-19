@@ -29,7 +29,6 @@ public abstract class DataGenerator {
             Main.main(new String[]{
                     "--all",
                     "--output=" + tempDir,
-                    "--input=" + "/Users/matt/dev/projects/mmo/MinestomDataGenerator/DataGenerator/src/main/resources"
             });
             DATA_FOLDER = tempDir.resolve("data").resolve("minecraft");
             LOOT_TABLES_FOLDER = DATA_FOLDER.resolve("loot_tables");
