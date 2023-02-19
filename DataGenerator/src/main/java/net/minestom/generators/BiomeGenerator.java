@@ -24,7 +24,7 @@ public final class BiomeGenerator extends DataGenerator {
             var biome = entry.getValue();
             JsonObject biomeJson = new JsonObject();
 
-`//            biomeJson.addProperty("humid", biome.isHumid());
+//            biomeJson.addProperty("humid", biome.isHumid());
 //            biomeJson.addProperty("scale", biome.dep);
 //            biomeJson.addProperty("depth", biome.getDepth());
             biomeJson.addProperty("temperature", biome.getBaseTemperature());
