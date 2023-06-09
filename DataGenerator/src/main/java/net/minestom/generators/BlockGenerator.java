@@ -131,6 +131,7 @@ public final class BlockGenerator extends DataGenerator {
         appendState(blockJson, state, "replaceable", blockState.getMaterial().isReplaceable(), false, boolean.class);
         appendState(blockJson, state, "solid", blockState.getMaterial().isSolid(), boolean.class);
         appendState(blockJson, state, "solidBlocking", blockState.getMaterial().isSolidBlocking(), boolean.class);
+        appendState(blockJson, state, "stepSoundId", BuiltInRegistries.SOUND_EVENT.getId(blockState.getSoundType().getStepSound()), int.class);
         // Shapes (Hit-boxes)
         appendState(blockJson, state, "shape", blockState.getShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO).toAabbs().toString(), String.class);
         appendState(blockJson, state, "collisionShape", blockState.getCollisionShape(EmptyBlockGetter.INSTANCE, BlockPos.ZERO).toAabbs().toString(), String.class);
