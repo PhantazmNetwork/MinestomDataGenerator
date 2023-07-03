@@ -28,36 +28,36 @@ public final class BiomeGenerator extends DataGenerator {
             mappedJson.add("precipitation", biomeJson.get("precipitation"));
             mappedJson.add("temperature", biomeJson.get("temperature"));
             if (biomeJson.has("temperature_modifier")) {
-                mappedJson.addProperty("temperatureModifier", biomeJson.get("temperature_modifier").getAsString().toUpperCase());
+                mappedJson.addProperty("temperature_modifier", biomeJson.get("temperature_modifier").getAsString().toUpperCase());
             }
             mappedJson.add("downfall", biomeJson.get("downfall"));
 
             JsonObject effectsJson = biomeJson.getAsJsonObject("effects");
             JsonObject mappedEffectsJson = new JsonObject();
-            mappedEffectsJson.add("fogColor", effectsJson.get("fog_color"));
-            mappedEffectsJson.add("waterColor", effectsJson.get("water_color"));
-            mappedEffectsJson.add("waterFogColor", effectsJson.get("water_fog_color"));
-            mappedEffectsJson.add("skyColor", effectsJson.get("sky_color"));
-            if (effectsJson.has("foliageColor")) {
-                mappedEffectsJson.add("foliageColor", effectsJson.get("foliage_color"));
+            mappedEffectsJson.add("fog_color", effectsJson.get("fog_color"));
+            mappedEffectsJson.add("water_color", effectsJson.get("water_color"));
+            mappedEffectsJson.add("water_fog_color", effectsJson.get("water_fog_color"));
+            mappedEffectsJson.add("sky_color", effectsJson.get("sky_color"));
+            if (effectsJson.has("foliage_color")) {
+                mappedEffectsJson.add("foliage_color", effectsJson.get("foliage_color"));
             }
-            if (effectsJson.has("grassColor")) {
-                mappedEffectsJson.add("grassColor", effectsJson.get("grass_color"));
+            if (effectsJson.has("grass_color")) {
+                mappedEffectsJson.add("grass_color", effectsJson.get("grass_color"));
             }
-            if (effectsJson.has("grassColorModifier")) {
-                mappedEffectsJson.addProperty("grass_colorModifier", effectsJson.get("grass_color_modifier").getAsString().toUpperCase());
+            if (effectsJson.has("grass_color_modifier")) {
+                mappedEffectsJson.addProperty("grass_color_modifier", effectsJson.get("grass_color_modifier").getAsString().toUpperCase());
             }
             if (effectsJson.has("particle")) {
                 mappedEffectsJson.add("particle", effectsJson.get("particle"));
             }
-            if (effectsJson.has("ambientSound")) {
-                mappedEffectsJson.add("ambientSound", effectsJson.get("ambient_sound"));
+            if (effectsJson.has("ambient_sound")) {
+                mappedEffectsJson.add("ambient_sound", effectsJson.get("ambient_sound"));
             }
-            if (effectsJson.has("moodSound")) {
-                mappedEffectsJson.add("moodSound", effectsJson.get("mood_sound"));
+            if (effectsJson.has("mood_sound")) {
+                mappedEffectsJson.add("mood_sound", effectsJson.get("mood_sound"));
             }
-            if (effectsJson.has("additionsSound")) {
-                mappedEffectsJson.add("additionsSound", effectsJson.get("additions_sound"));
+            if (effectsJson.has("additions_sound")) {
+                mappedEffectsJson.add("additions_sound", effectsJson.get("additions_sound"));
             }
             if (effectsJson.has("music")) {
                 mappedEffectsJson.add("music", effectsJson.get("music"));
