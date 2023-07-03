@@ -2,13 +2,14 @@ package net.minestom.generators;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import net.minecraft.world.level.biome.*;
 import net.minestom.datagen.DataGenerator;
 import net.minestom.utils.ResourceUtils;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
 
 public final class BiomeGenerator extends DataGenerator {
 
@@ -17,40 +18,64 @@ public final class BiomeGenerator extends DataGenerator {
 
     @Override
     public JsonObject generate() throws Exception {
-        var biomesJson = new JsonObject();
+        var resultJson = new JsonObject();
         var biomes = readBiomes();
 
         for (var entry : biomes.entrySet()) {
-            var biome = entry.getValue();
-            JsonObject biomeJson = new JsonObject();
+            var biomeJson = entry.getValue();
+            JsonObject mappedJson = new JsonObject();
 
-            biomeJson.addProperty("humid", biome.isHumid());
-//            biomeJson.addProperty("scale", biome.dep);
-//            biomeJson.addProperty("depth", biome.getDepth());
-            biomeJson.addProperty("temperature", biome.getBaseTemperature());
-            biomeJson.addProperty("downfall", biome.getDownfall());
-            biomeJson.addProperty("precipitation", biome.getPrecipitation().getSerializedName());
-            // Colors
-            biomeJson.addProperty("fogColor", biome.getFogColor());
-            biomeJson.addProperty("waterColor", biome.getWaterColor());
-            biomeJson.addProperty("waterFogColor", biome.getWaterFogColor());
-            biomeJson.addProperty("skyColor", biome.getSkyColor());
-            biomeJson.addProperty("foliageColor", biome.getFoliageColor());
-            biomeJson.addProperty("foliageColorOverride", biome.getSpecialEffects().getFoliageColorOverride().orElse(null));
-            biomeJson.addProperty("grassColorOverride", biome.getSpecialEffects().getGrassColorOverride().orElse(null));
-            biomeJson.addProperty("grassColorModifier", biome.getSpecialEffects().getGrassColorModifier().getSerializedName());
-            biomesJson.add(entry.getKey(), biomeJson);
+            mappedJson.add("precipitation", biomeJson.get("precipitation"));
+            mappedJson.add("temperature", biomeJson.get("temperature"));
+            if (biomeJson.has("temperature_modifier")) {
+                mappedJson.addProperty("temperature_modifier", biomeJson.get("temperature_modifier").getAsString().toUpperCase());
+            }
+            mappedJson.add("downfall", biomeJson.get("downfall"));
+
+            JsonObject effectsJson = biomeJson.getAsJsonObject("effects");
+            JsonObject mappedEffectsJson = new JsonObject();
+            mappedEffectsJson.add("fog_color", effectsJson.get("fog_color"));
+            mappedEffectsJson.add("water_color", effectsJson.get("water_color"));
+            mappedEffectsJson.add("water_fog_color", effectsJson.get("water_fog_color"));
+            mappedEffectsJson.add("sky_color", effectsJson.get("sky_color"));
+            if (effectsJson.has("foliage_color")) {
+                mappedEffectsJson.add("foliage_color", effectsJson.get("foliage_color"));
+            }
+            if (effectsJson.has("grass_color")) {
+                mappedEffectsJson.add("grass_color", effectsJson.get("grass_color"));
+            }
+            if (effectsJson.has("grass_color_modifier")) {
+                mappedEffectsJson.addProperty("grass_color_modifier", effectsJson.get("grass_color_modifier").getAsString().toUpperCase());
+            }
+            if (effectsJson.has("particle")) {
+                mappedEffectsJson.add("particle", effectsJson.get("particle"));
+            }
+            if (effectsJson.has("ambient_sound")) {
+                mappedEffectsJson.add("ambient_sound", effectsJson.get("ambient_sound"));
+            }
+            if (effectsJson.has("mood_sound")) {
+                mappedEffectsJson.add("mood_sound", effectsJson.get("mood_sound"));
+            }
+            if (effectsJson.has("additions_sound")) {
+                mappedEffectsJson.add("additions_sound", effectsJson.get("additions_sound"));
+            }
+            if (effectsJson.has("music")) {
+                mappedEffectsJson.add("music", effectsJson.get("music"));
+            }
+
+            mappedJson.add("effects", effectsJson);
+            resultJson.add(entry.getKey(), mappedJson);
         }
 
-        return biomesJson;
+        return resultJson;
     }
 
-    private Map<String, Biome> readBiomes() throws URISyntaxException, IOException {
+    private Map<String, JsonObject> readBiomes() throws URISyntaxException, IOException {
         // get all files from the biomes directory
         var files = ResourceUtils.getResourceListing(
                 net.minecraft.server.MinecraftServer.class, BIOMES_DIR);
 
-        Map<String, Biome> biomesJson = new HashMap<>();
+        Map<String, JsonObject> biomesJson = new HashMap<>();
         for (String fileName : files) {
             var file = net.minecraft.server.MinecraftServer.class
                     .getClassLoader()
@@ -66,44 +91,11 @@ public final class BiomeGenerator extends DataGenerator {
             if (content.length() > 0 && fileName.endsWith(".json")) {
                 var biomeKey = "minecraft:" + fileName.substring(0, fileName.length() - 5);
                 var jsonObject = gson.fromJson(content.toString(), JsonObject.class);
-                biomesJson.put(biomeKey, jsonToBiome(jsonObject));
+                biomesJson.put(biomeKey, jsonObject);
             }
         }
 
         return biomesJson;
     }
 
-    private Biome jsonToBiome(JsonObject json) {
-        var effectsJson = json.get("effects").getAsJsonObject();
-        var effects = new BiomeSpecialEffects.Builder()
-                .fogColor(effectsJson.get("fog_color").getAsInt())
-                .waterColor(effectsJson.get("water_color").getAsInt())
-                .waterFogColor(effectsJson.get("water_fog_color").getAsInt())
-                .skyColor(effectsJson.get("sky_color").getAsInt());
-
-        if (effectsJson.has("foliage_color")) {
-            effects = effects.foliageColorOverride(effectsJson.get("foliage_color").getAsInt());
-        }
-
-        if (effectsJson.has("grass_color")) {
-            effects = effects.grassColorOverride(
-                    effectsJson.get("grass_color").getAsInt()
-            );
-        }
-
-        if (effectsJson.has("grass_color_modifier")) {
-            effects = effects.grassColorModifier(
-                    BiomeSpecialEffects.GrassColorModifier.valueOf(effectsJson.get("grass_color_modifier").getAsString().toUpperCase())
-            );
-        }
-
-        return new Biome.BiomeBuilder()
-                .temperature(json.get("temperature").getAsFloat())
-                .downfall(json.get("downfall").getAsFloat())
-                .precipitation(Biome.Precipitation.valueOf(json.get("precipitation").getAsString().toUpperCase()))
-                .specialEffects(effects.build())
-                .mobSpawnSettings(MobSpawnSettings.EMPTY)
-                .generationSettings(BiomeGenerationSettings.EMPTY)
-                .build();
-    }
 }
