@@ -49,12 +49,13 @@ public final class BlockGenerator extends DataGenerator {
                 blockJson.addProperty("correspondingItem", itemRegistry.getKey(correspondingItem).toString());
             }
             // Random offset
-            if (defaultBlockState.getOffsetType() != BlockBehaviour.OffsetType.NONE) {
-                blockJson.addProperty("maxHorizontalOffset", block.getMaxHorizontalOffset());
-                if (defaultBlockState.getOffsetType() == BlockBehaviour.OffsetType.XYZ) {
-                    blockJson.addProperty("maxVerticalOffset", block.getMaxVerticalOffset());
-                }
-            }
+            //todo does not allow you to determine which offset function is used w/out reflection
+            // seems like kind of a useless thing anyway
+//            if (defaultBlockState.hasOffsetFunction()) {
+//                blockJson.addProperty("maxHorizontalOffset", block.getMaxHorizontalOffset());
+//                blockJson.addProperty("maxVerticalOffset", block.getMaxVerticalOffset());
+//            }
+
             // Default values
             writeState(defaultBlockState, null, blockJson);
             {
