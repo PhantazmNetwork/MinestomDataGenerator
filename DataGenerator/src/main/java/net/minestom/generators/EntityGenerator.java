@@ -66,6 +66,7 @@ public final class EntityGenerator extends DataGenerator {
             addDefaultable(entity, "drag", findDrag(entityType), DEFAULT_DRAG);
             addDefaultable(entity, "acceleration", findAcceleration(entityType), DEFAULT_ACCELERATION);
             entity.addProperty("clientTrackingRange", entityType.clientTrackingRange());
+            entity.addProperty("sendsAttributes", LivingEntity.class.isAssignableFrom(entityClass));
             entities.add(location.toString(), entity);
         }
         return entities;
